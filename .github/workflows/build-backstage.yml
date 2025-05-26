@@ -32,6 +32,9 @@ jobs:
         aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}  
         aws-region: ${{ env.AWS_REGION }}
 
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
@@ -55,8 +58,7 @@ jobs:
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        
 
   update-manifests:
     needs: build-and-push
@@ -66,7 +68,7 @@ jobs:
     - name: Checkout manifests repo
       uses: actions/checkout@v4
       with:
-        repository: diediazping/crossplane-tutorial
+        repository: diediazping/backstage-k8s-manifests
         token: ${{ secrets.GITHUB_TOKEN }}
         path: backstage-demo
 
