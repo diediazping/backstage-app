@@ -6,6 +6,7 @@ on:
     - 'app/**'
     - 'packages/**'
     - 'Dockerfile'
+    - '.github/workflows/build-backstage.yml'
   pull_request:
     branches: [main]
 
