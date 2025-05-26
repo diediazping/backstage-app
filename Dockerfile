@@ -41,7 +41,11 @@ RUN apt-get update && apt-get install -y \
     dumb-init \
     && rm -rf /var/lib/apt/lists/*
 
-RUN groupadd -r backstage && useradd -r -g backstage -m backstage
+RUN mkdir -p /app && \
+    groupadd -r backstage && \
+    useradd -r -g backstage -d /app backstage && \
+    chown backstage:backstage /app
+
 
 WORKDIR /app
 USER backstage
