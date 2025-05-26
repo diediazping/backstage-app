@@ -22,6 +22,7 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+
     - name: Debug AWS credentials
     run: |
       aws sts get-caller-identity
