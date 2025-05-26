@@ -22,6 +22,13 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+    - name: Debug AWS credentials
+    run: |
+      aws sts get-caller-identity
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: us-east-1  
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
