@@ -17,13 +17,13 @@ RUN npm install -g @backstage/create-app
 
 # Crear una nueva aplicación Backstage
 # (Esto es interactivo, así que necesitamos automatizarlo)
-RUN echo "my-backstage-app" | npx @backstage/create-app@latest --skip-install
+RUN echo "backstage-app" | npx @backstage/create-app@latest --skip-install
 
 # Cambiar al directorio de la aplicación
-WORKDIR /app/my-backstage-app
+WORKDIR /app/backstage-app
 
 # Instalar dependencias
-RUN yarn install --frozen-lockfile --network-timeout 600000
+RUN yarn install --immutable --network-timeout 600000
 
 # Copiar configuración personalizada si existe
 COPY app-config.production.yaml ./app-config.production.yaml
@@ -45,10 +45,10 @@ WORKDIR /app
 USER backstage
 
 # Copiar la aplicación construida
-COPY --from=builder --chown=backstage:backstage /app/my-backstage-app/packages/backend/dist/bundle.tar.gz ./
+COPY --from=builder --chown=backstage:backstage /app/backstage-app/packages/backend/dist/bundle.tar.gz ./
 RUN tar xzf bundle.tar.gz && rm bundle.tar.gz
 
-COPY --from=builder --chown=backstage:backstage /app/my-backstage-app/app-config*.yaml ./
+COPY --from=builder --chown=backstage:backstage /app/backstage-app/app-config*.yaml ./
 
 EXPOSE 7007
 
