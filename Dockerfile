@@ -46,16 +46,22 @@ RUN mkdir -p /app && \
     useradd -r -g backstage -d /app backstage && \
     chown backstage:backstage /app
 
-
 WORKDIR /app
 USER backstage
 
-# CORRECCIÓN PRINCIPAL: Copiar los node_modules también
-COPY --from=builder --chown=backstage:backstage /app/backstage-app/packages/backend/dist ./packages/backend/dist
-COPY --from=builder --chown=backstage:backstage /app/backstage-app/node_modules ./node_modules
-COPY --from=builder --chown=backstage:backstage /app/backstage-app/packages/backend/node_modules ./packages/backend/node_modules
+# Copiar los archivos necesarios desde la etapa de construcción
+COPY --from=builder --chown=backstage:backstage /app/backstage-app/packages/backend/dist/bundle.tar.gz ./packages/backend/
 COPY --from=builder --chown=backstage:backstage /app/backstage-app/app-config*.yaml ./
 COPY --from=builder --chown=backstage:backstage /app/backstage-app/package.json ./
+
+# Descomprimir el bundle generado por yarn build:backend
+RUN mkdir -p /app/packages/backend/dist && \
+    tar -xzf /app/packages/backend/bundle.tar.gz -C /app/packages/backend/dist && \
+    rm /app/packages/backend/bundle.tar.gz
+
+# Copiar node_modules necesarios
+COPY --from=builder --chown=backstage:backstage /app/backstage-app/node_modules ./node_modules
+COPY --from=builder --chown=backstage:backstage /app/backstage-app/packages/backend/node_modules ./packages/backend/node_modules
 
 EXPOSE 7007
 
@@ -63,4 +69,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
   CMD curl -f http://localhost:7007/api/catalog/health || exit 1
 
 ENTRYPOINT ["dumb-init", "--"]
-CMD ["node", "packages/backend"]
+CMD ["node", "packages/backend/dist"]
