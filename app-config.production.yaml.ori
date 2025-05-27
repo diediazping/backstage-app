@@ -52,6 +52,27 @@ catalog:
     - type: file
       target: ../../catalog/entities.yaml
 
+kubernetes:
+  serviceLocatorMethod:
+    type: 'multiTenant'
+  clusterLocatorMethods:
+    - type: 'config'
+      clusters:
+        - url: ${K8S_CLUSTER_URL}
+          name: ${K8S_CLUSTER_NAME}
+          authProvider: 'serviceAccount'
+          serviceAccountToken: ${K8S_SERVICE_ACCOUNT_TOKEN}
+          skipTLSVerify: false
+          skipMetricsLookup: false
+
+argocd:
+  appLocatorMethods:
+    - type: 'config'
+      instances:
+        - name: argocd
+          url: https://a1158eea44f104787a8791e8614ebfe3-1164417482.us-east-1.elb.amazonaws.com
+          token: ${ARGOCD_TOKEN}
+
 scaffolder:
   github:
     token: ${GITHUB_TOKEN}
