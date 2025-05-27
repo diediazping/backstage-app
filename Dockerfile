@@ -66,6 +66,5 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
   CMD curl -f http://localhost:7007/api/catalog/health || exit 1
 
 ENTRYPOINT ["dumb-init", "--"]
-# Usar yarn start que es más confiable
-CMD ["yarn", "start:backend"]
 
+CMD ["sh", "-c", "if yarn workspace backend start 2>/dev/null; then exit 0; elif yarn dev 2>/dev/null; then exit 0; elif node packages/backend/dist/index.js 2>/dev/null; then exit 0; else echo 'No suitable start command found' && yarn --help; fi"]
