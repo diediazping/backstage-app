@@ -27,9 +27,11 @@ RUN yarn add @testing-library/react@^16.0.0 react@^18.0.0 react-dom@^18.0.0
 
 RUN yarn install --immutable --network-timeout 600000
 
+
 # Copiar configuración personalizada si existe
 COPY app-config.production.yaml ./packages/backend/app-config.production.yaml
 
+RUN yarn --cwd ./packages/backend add pg
 # Construir la aplicación
 RUN yarn build:backend --config app-config.production.yaml
 
