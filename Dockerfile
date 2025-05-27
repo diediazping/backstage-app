@@ -67,7 +67,6 @@ RUN echo "=== RUNTIME FILES ===" && \
 
 EXPOSE 7007 3000 
 
-
 ENTRYPOINT ["dumb-init", "--"]
 CMD ["sh", "-c", "yarn start  2>/dev/null"]
 #CMD ["sh", "-c", "node packages/backend/dist/index.js --config app-config.yaml & yarn workspace @backstage/app-default start"]
