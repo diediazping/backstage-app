@@ -50,11 +50,12 @@ RUN mkdir -p /app && \
 WORKDIR /app
 USER backstage
 
-# Copiar la aplicación construida
-COPY --from=builder --chown=backstage:backstage /app/backstage-app/packages/backend/dist/bundle.tar.gz ./
-RUN tar xzf bundle.tar.gz && rm bundle.tar.gz
-
+# CORRECCIÓN PRINCIPAL: Copiar los node_modules también
+COPY --from=builder --chown=backstage:backstage /app/backstage-app/packages/backend/dist ./packages/backend/dist
+COPY --from=builder --chown=backstage:backstage /app/backstage-app/node_modules ./node_modules
+COPY --from=builder --chown=backstage:backstage /app/backstage-app/packages/backend/node_modules ./packages/backend/node_modules
 COPY --from=builder --chown=backstage:backstage /app/backstage-app/app-config*.yaml ./
+COPY --from=builder --chown=backstage:backstage /app/backstage-app/package.json ./
 
 EXPOSE 7007
 
