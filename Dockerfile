@@ -35,8 +35,8 @@ COPY app-config.production.yaml ./packages/backend/app-config.yaml
 
 RUN yarn --cwd ./packages/backend add pg
 # Construir la aplicación
-RUN yarn build:backend 
-RUN yarn build:app
+RUN yarn build:
+
 
 # Production stage
 FROM node:18-bullseye-slim
@@ -65,9 +65,9 @@ RUN echo "=== RUNTIME FILES ===" && \
     ls -la packages/backend/dist/ 2>/dev/null || echo "No dist directory found" && \
     echo "=== END RUNTIME FILES ==="
 
-EXPOSE 7007 3000
+EXPOSE 7007 
 
-HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+HEALTHCHECK --interval=300s --timeout=10s --start-period=40s --retries=3 \
   CMD curl -f http://localhost:7007/api/catalog/health || exit 1
 
 ENTRYPOINT ["dumb-init", "--"]

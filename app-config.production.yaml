@@ -1,12 +1,14 @@
 app:
   title: Backstage
-  baseUrl: http://a1158eea44f104787a8791e8614ebfe3-1164417482.us-east-1.elb.amazonaws.com
+  baseUrl: http://localhost:3000
+  listen:
+    host: 0.0.0.0
 
 organization:
   name: POCs
 
 backend:
-  baseUrl: http://a1158eea44f104787a8791e8614ebfe3-1164417482.us-east-1.elb.amazonaws.com
+  baseUrl: http://localhost:7007
   listen:
     port: 7007
     host: 0.0.0.0
@@ -68,7 +70,7 @@ argocd:
     - type: 'config'
       instances:
         - name: argocd
-          url: https://argocd.tudominio.com
+          url: https://a1158eea44f104787a8791e8614ebfe3-1164417482.us-east-1.elb.amazonaws.com
           token: ${ARGOCD_TOKEN}
 
 scaffolder:
