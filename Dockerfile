@@ -67,8 +67,6 @@ RUN echo "=== RUNTIME FILES ===" && \
 
 EXPOSE 7007 3000 
 
-HEALTHCHECK --interval=300s --timeout=10s --start-period=40s --retries=3 \
-  CMD curl -f http://localhost:7007/api/catalog/health || exit 1
 
 ENTRYPOINT ["dumb-init", "--"]
 CMD ["sh", "-c", "yarn start  2>/dev/null"]
