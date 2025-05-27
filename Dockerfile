@@ -35,8 +35,8 @@ COPY app-config.production.yaml ./packages/backend/app-config.yaml
 
 RUN yarn --cwd ./packages/backend add pg
 # Construir la aplicación
-RUN yarn build:backend --config ./app-config.yaml
-RUN yarn build:frontend
+RUN yarn build:backend 
+RUN yarn build:app
 
 # Production stage
 FROM node:18-bullseye-slim
