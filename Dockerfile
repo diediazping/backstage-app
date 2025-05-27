@@ -28,12 +28,15 @@ RUN yarn add @testing-library/react@^16.0.0 react@^18.0.0 react-dom@^18.0.0
 RUN yarn install --immutable --network-timeout 600000
 
 
-# Copiar configuración personalizada si existe
-COPY app-config.production.yaml ./packages/backend/app-config.production.yaml
+
+# Copiar configuración personalizada y renombrarla como app-config.yaml
+COPY app-config.production.yaml ./app-config.yaml
+COPY app-config.production.yaml ./packages/backend/app-config.yaml
 
 RUN yarn --cwd ./packages/backend add pg
 # Construir la aplicación
-RUN yarn build:backend --config app-config.production.yaml
+RUN yarn build:backend --config ./app-config.yaml
+RUN yarn build:frontend
 
 # Production stage
 FROM node:18-bullseye-slim
@@ -62,11 +65,12 @@ RUN echo "=== RUNTIME FILES ===" && \
     ls -la packages/backend/dist/ 2>/dev/null || echo "No dist directory found" && \
     echo "=== END RUNTIME FILES ==="
 
-EXPOSE 7007
+EXPOSE 7007 3000
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
   CMD curl -f http://localhost:7007/api/catalog/health || exit 1
 
 ENTRYPOINT ["dumb-init", "--"]
-
-CMD ["sh", "-c", "if yarn workspace backend start 2>/dev/null; then exit 0; elif yarn dev 2>/dev/null; then exit 0; elif node packages/backend/dist/index.js 2>/dev/null; then exit 0; else echo 'No suitable start command found' && yarn --help; fi"]
+CMD ["sh", "-c", "yarn start  2>/dev/null"]
+#CMD ["sh", "-c", "node packages/backend/dist/index.js --config app-config.yaml & yarn workspace @backstage/app-default start"]
+#CMD ["sh", "-c", "if yarn workspace backend start 2>/dev/null; then exit 0; elif yarn dev 2>/dev/null; then exit 0; elif node packages/backend/dist/index.js 2>/dev/null; then exit 0; else echo 'No suitable start command found' && yarn --help; fi"]
