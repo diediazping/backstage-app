@@ -35,7 +35,7 @@ COPY app-config.production.yaml ./packages/backend/app-config.yaml
 
 RUN yarn --cwd ./packages/backend add pg
 # Construir la aplicación
-RUN yarn build:
+RUN yarn build:all
 
 
 # Production stage
