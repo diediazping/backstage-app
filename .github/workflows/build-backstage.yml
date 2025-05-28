@@ -7,6 +7,7 @@ on:
     - 'packages/**'
     - 'Dockerfile'
     - '.github/workflows/build-backstage.yml'
+    - 'app-config.production.yaml'
   pull_request:
     branches: [main]
 
