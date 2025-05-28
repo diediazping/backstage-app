@@ -35,7 +35,7 @@ COPY app-config.production.yaml ./packages/backend/app-config.yaml
 
 RUN yarn --cwd ./packages/backend add pg
 # Construir la aplicación
-RUN yarn build:all
+RUN yarn build:backend
 
 
 # Production stage
@@ -43,6 +43,7 @@ FROM node:18-bullseye-slim
 
 RUN apt-get update && apt-get install -y \
     curl \
+    git \
     dumb-init \
     && rm -rf /var/lib/apt/lists/*
 
@@ -65,7 +66,8 @@ RUN echo "=== RUNTIME FILES ===" && \
     ls -la packages/backend/dist/ 2>/dev/null || echo "No dist directory found" && \
     echo "=== END RUNTIME FILES ==="
 
-EXPOSE 7007 3000 
+EXPOSE 7007 
+
 
 ENTRYPOINT ["dumb-init", "--"]
 CMD ["sh", "-c", "yarn start  2>/dev/null"]
